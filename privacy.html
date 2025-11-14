@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DealHawk Privacy Policy</title>
+    <meta name="description" content="Privacy policy for DealHawk Chrome Extension - Learn how we protect your data.">
     <style>
         * {
             margin: 0;
@@ -11,153 +12,248 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-dark-1: #0a0e27;
+            --bg-dark-2: #1a1f3a;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --glow-blue: rgba(59, 130, 246, 0.4);
+            --text-light: #e5e7eb;
+            --text-medium: #9ca3af;
+            --text-dark: #6b7280;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
+            color: var(--text-light);
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        .header {
+        header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 60px;
         }
 
-        .header h1 {
-            font-size: 2.5em;
-            color: #667eea;
-            margin-bottom: 10px;
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .header .tagline {
-            font-size: 1.1em;
-            color: #666;
-            font-weight: 300;
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 24px var(--glow-blue);
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: var(--text-medium);
+            font-size: 20px;
+        }
+
+        .content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 48px;
+            box-shadow:
+                0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .last-updated {
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 6px;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 40px;
             text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        h2 {
-            color: #667eea;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        h3 {
-            color: #555;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        p {
-            margin-bottom: 15px;
-            color: #555;
-        }
-
-        ul {
-            margin: 15px 0;
-            padding-left: 30px;
-        }
-
-        li {
-            margin-bottom: 10px;
-            color: #555;
+            color: var(--text-light);
+            font-weight: 600;
         }
 
         .highlight-box {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 4px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border-left: 4px solid var(--accent-green);
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 8px;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .highlight-box strong {
-            color: #667eea;
+            color: var(--accent-green);
+        }
+
+        h2 {
+            color: var(--text-light);
+            margin-top: 48px;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--text-light);
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-medium);
+            font-size: 16px;
+        }
+
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 32px;
+            color: var(--text-medium);
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.6;
         }
 
         .permission-list {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 15px 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 32px;
+            border-radius: 12px;
+            margin: 24px 0;
         }
 
         .permission-item {
             display: flex;
-            align-items: start;
-            margin-bottom: 15px;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .permission-item:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         .permission-name {
-            font-weight: 600;
-            color: #667eea;
-            min-width: 150px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            min-width: 180px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
         }
 
         .permission-desc {
-            color: #666;
+            color: var(--text-medium);
+            flex: 1;
         }
 
         .contact-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 40px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            padding: 48px;
+            border-radius: 16px;
+            margin-top: 60px;
             text-align: center;
+            box-shadow: 0 8px 32px var(--glow-blue);
         }
 
         .contact-section h2 {
             color: white;
             border: none;
             margin-top: 0;
+            padding-bottom: 0;
+        }
+
+        .contact-section p {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .contact-section a {
             color: white;
             text-decoration: underline;
+            font-weight: 600;
         }
 
-        .footer {
+        .contact-section a:hover {
+            opacity: 0.8;
+        }
+
+        footer {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #999;
-            font-size: 0.9em;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-dark);
         }
 
         a {
-            color: #667eea;
+            color: var(--accent-blue);
             text-decoration: none;
         }
 
@@ -165,211 +261,214 @@
             text-decoration: underline;
         }
 
+        strong {
+            color: var(--text-light);
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
+            .content {
+                padding: 32px 24px;
             }
 
-            .header h1 {
-                font-size: 2em;
+            h1 {
+                font-size: 36px;
             }
 
             .permission-item {
                 flex-direction: column;
+                gap: 8px;
             }
 
             .permission-name {
-                margin-bottom: 5px;
+                min-width: auto;
             }
+
+            .contact-section {
+                padding: 32px 24px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🦅 DealHawk</h1>
-            <p class="tagline">Privacy Policy</p>
-        </div>
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🦅</div>
+            </div>
+            <h1>Privacy Policy</h1>
+            <p class="subtitle">How DealHawk protects your data</p>
+        </header>
 
-        <div class="last-updated">
-            <strong>Last Updated:</strong> November 12, 2025
-        </div>
-
-        <div class="highlight-box">
-            <strong>Privacy First:</strong> DealHawk is designed with your privacy in mind. We don't collect, store, or transmit any personal information. All data stays on your device.
-        </div>
-
-        <h2>Overview</h2>
-        <p>
-            DealHawk is a Chrome browser extension that helps users find profitable Lego arbitrage opportunities by monitoring retirement announcements and comparing prices across major retailers. This privacy policy explains how the extension handles data and what permissions it requires.
-        </p>
-
-        <h2>Data Collection</h2>
-        <p>
-            <strong>DealHawk does NOT collect, store, or transmit any personal information.</strong>
-        </p>
-
-        <p>Specifically, we do NOT:</p>
-        <ul>
-            <li>Collect personally identifiable information (name, email, address)</li>
-            <li>Track your browsing history or habits</li>
-            <li>Use cookies or tracking pixels</li>
-            <li>Share data with third parties</li>
-            <li>Send data to external servers or databases</li>
-            <li>Use analytics or advertising services</li>
-            <li>Monitor your purchases or financial information</li>
-        </ul>
-
-        <h2>Local Storage Only</h2>
-        <p>
-            All data generated by DealHawk is stored locally on your device using Chrome's built-in storage API. This includes:
-        </p>
-        <ul>
-            <li><strong>User Settings:</strong> Your configured price thresholds, scan intervals, and enabled retailers</li>
-            <li><strong>Opportunity Data:</strong> Product information, prices, and potential profit calculations</li>
-            <li><strong>Last Scan Time:</strong> Timestamp of the most recent price check</li>
-        </ul>
-        <p>
-            This data never leaves your computer and can be deleted at any time by uninstalling the extension or clearing Chrome's extension storage.
-        </p>
-
-        <h2>Third-Party Services</h2>
-        <p>
-            To function properly, DealHawk fetches publicly available product information from these retailers:
-        </p>
-        <ul>
-            <li>Lego.com (retirement announcements and product details)</li>
-            <li>Amazon.com (product prices)</li>
-            <li>Walmart.com (product prices)</li>
-            <li>Target.com (product prices)</li>
-        </ul>
-
-        <div class="highlight-box">
-            <strong>Important:</strong> These requests are made directly from your browser to the retailers' public websites, just like if you were browsing them manually. DealHawk does not act as an intermediary or store any of this data on external servers.
-        </div>
-
-        <p>
-            Each retailer has their own privacy policies and may collect data when you visit their websites. Please refer to their respective privacy policies:
-        </p>
-        <ul>
-            <li><a href="https://www.lego.com/privacy-policy" target="_blank">Lego Privacy Policy</a></li>
-            <li><a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=468496" target="_blank">Amazon Privacy Policy</a></li>
-            <li><a href="https://corporate.walmart.com/privacy-security" target="_blank">Walmart Privacy Policy</a></li>
-            <li><a href="https://www.target.com/c/privacy-policy/-/N-4sr7p" target="_blank">Target Privacy Policy</a></li>
-        </ul>
-
-        <h2>Permissions Explained</h2>
-        <p>
-            DealHawk requires the following Chrome permissions to function. Here's exactly why each permission is needed:
-        </p>
-
-        <div class="permission-list">
-            <div class="permission-item">
-                <div class="permission-name">storage</div>
-                <div class="permission-desc">
-                    Save your settings (price thresholds, scan intervals, enabled retailers) and found opportunities locally on your device. No data is sent to external servers.
-                </div>
+        <div class="content">
+            <div class="last-updated">
+                <strong>Last Updated:</strong> January 14, 2025
             </div>
 
-            <div class="permission-item">
-                <div class="permission-name">alarms</div>
-                <div class="permission-desc">
-                    Schedule periodic price checks at your configured interval (default: every 30 minutes). This allows the extension to run in the background without draining battery.
-                </div>
+            <div class="highlight-box">
+                <strong>Privacy First:</strong> DealHawk is designed with your privacy in mind. We don't collect, store, or transmit any personal information. All data stays on your device.
             </div>
 
-            <div class="permission-item">
-                <div class="permission-name">notifications</div>
-                <div class="permission-desc">
-                    Display browser notifications when profitable opportunities are found. You can disable these in Chrome settings at any time.
-                </div>
-            </div>
-
-            <div class="permission-item">
-                <div class="permission-name">host_permissions</div>
-                <div class="permission-desc">
-                    Access the following websites to check public product prices:
-                    <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li>https://www.lego.com/*</li>
-                        <li>https://www.amazon.com/*</li>
-                        <li>https://www.walmart.com/*</li>
-                        <li>https://www.target.com/*</li>
-                    </ul>
-                    These permissions only allow fetching public data from these specific domains, nothing more.
-                </div>
-            </div>
-        </div>
-
-        <h2>Data Security</h2>
-        <p>
-            Since all data is stored locally on your device using Chrome's secure storage API, your data is protected by:
-        </p>
-        <ul>
-            <li>Chrome's built-in encryption for extension storage</li>
-            <li>Your device's operating system security</li>
-            <li>Your Google account security (if Chrome sync is enabled)</li>
-        </ul>
-        <p>
-            DealHawk does not transmit data over the internet (except for fetching public product information), so there is no risk of data interception or server breaches.
-        </p>
-
-        <h2>Chrome Sync</h2>
-        <p>
-            If you have Chrome Sync enabled for extensions, your DealHawk settings may be synced across your devices via Google's servers. This is controlled by Chrome's sync settings, not by DealHawk. To disable sync for extensions:
-        </p>
-        <ol>
-            <li>Go to Chrome Settings → Sync and Google Services</li>
-            <li>Click "Manage what you sync"</li>
-            <li>Toggle off "Extensions"</li>
-        </ol>
-
-        <h2>Children's Privacy</h2>
-        <p>
-            DealHawk is not directed at children under the age of 13 and does not knowingly collect any information from children. The extension is intended for adult users interested in product arbitrage and reselling.
-        </p>
-
-        <h2>Changes to This Policy</h2>
-        <p>
-            We may update this privacy policy from time to time. Any changes will be reflected in the "Last Updated" date at the top of this page. Continued use of DealHawk after changes constitutes acceptance of the updated policy.
-        </p>
-        <p>
-            For material changes that affect how your data is handled, we will notify users through the extension's popup interface.
-        </p>
-
-        <h2>Your Rights</h2>
-        <p>
-            Since DealHawk does not collect or store personal information on external servers, there is no data to request, modify, or delete from our systems. However, you can:
-        </p>
-        <ul>
-            <li><strong>View your data:</strong> Click the extension icon to see all stored opportunities and settings</li>
-            <li><strong>Delete your data:</strong> Uninstall the extension or clear Chrome's extension storage</li>
-            <li><strong>Export your data:</strong> Use Chrome DevTools to access the extension's local storage</li>
-            <li><strong>Control notifications:</strong> Disable in Chrome settings or the extension's settings page</li>
-        </ul>
-
-        <h2>Open Source</h2>
-        <p>
-            DealHawk is transparent in its operation. The complete source code is available for review, ensuring that the extension operates exactly as described in this privacy policy.
-        </p>
-
-        <div class="contact-section">
-            <h2>Contact Us</h2>
+            <h2>Overview</h2>
             <p>
-                If you have questions, concerns, or suggestions about this privacy policy or DealHawk's data practices, please contact us:
+                DealHawk is a Chrome browser extension that helps users find profitable Lego arbitrage opportunities by monitoring retirement announcements and comparing prices across major retailers. This privacy policy explains how the extension handles data and what permissions it requires.
             </p>
-            <p style="margin-top: 20px;">
-                <strong>Email:</strong> <a href="mailto:support@dealhawk.app">support@dealhawk.app</a><br>
-                <strong>GitHub:</strong> <a href="https://github.com/lucavehbiu/dealhawk-extension" target="_blank">lucavehbiu/dealhawk-extension</a>
+
+            <h2>Data Collection</h2>
+            <p>
+                <strong>DealHawk does NOT collect, store, or transmit any personal information.</strong>
             </p>
-            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">
-                We typically respond within 48 hours.
+
+            <p>Specifically, we do NOT:</p>
+            <ul>
+                <li>Collect personally identifiable information (name, email, address)</li>
+                <li>Track your browsing history or habits</li>
+                <li>Use cookies or tracking pixels</li>
+                <li>Share data with third parties</li>
+                <li>Send data to external servers or databases</li>
+                <li>Use analytics or advertising services</li>
+                <li>Monitor your purchases or financial information</li>
+            </ul>
+
+            <h2>Local Storage Only</h2>
+            <p>
+                All data generated by DealHawk is stored locally on your device using Chrome's built-in storage API. This includes:
             </p>
+            <ul>
+                <li><strong>User Settings:</strong> Your configured price thresholds, scan intervals, and enabled retailers</li>
+                <li><strong>Opportunity Data:</strong> Product information, prices, and potential profit calculations</li>
+                <li><strong>Last Scan Time:</strong> Timestamp of the most recent price check</li>
+            </ul>
+            <p>
+                This data never leaves your computer and can be deleted at any time by uninstalling the extension or clearing Chrome's extension storage.
+            </p>
+
+            <h2>Third-Party Services</h2>
+            <p>
+                To function properly, DealHawk fetches publicly available product information from these retailers:
+            </p>
+            <ul>
+                <li>Lego.com (retirement announcements and product details)</li>
+                <li>Amazon.com (product prices)</li>
+                <li>Walmart.com (product prices)</li>
+                <li>Target.com (product prices)</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>Important:</strong> These requests are made directly from your browser to the retailers' public websites, just like if you were browsing them manually. DealHawk does not act as an intermediary or store any of this data on external servers.
+            </div>
+
+            <p>
+                Each retailer has their own privacy policies. Please refer to their respective privacy policies for more information.
+            </p>
+
+            <h2>Permissions Explained</h2>
+            <p>
+                DealHawk requires the following Chrome permissions to function. Here's exactly why each permission is needed:
+            </p>
+
+            <div class="permission-list">
+                <div class="permission-item">
+                    <div class="permission-name">storage</div>
+                    <div class="permission-desc">
+                        Save your settings (price thresholds, scan intervals, enabled retailers) and found opportunities locally on your device. No data is sent to external servers.
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-name">alarms</div>
+                    <div class="permission-desc">
+                        Schedule periodic price checks at your configured interval (default: every 30 minutes). This allows the extension to run in the background without draining battery.
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-name">notifications</div>
+                    <div class="permission-desc">
+                        Display browser notifications when profitable opportunities are found. You can disable these in Chrome settings at any time.
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-name">host_permissions</div>
+                    <div class="permission-desc">
+                        Access the following websites to check public product prices:
+                        <ul style="margin-top: 10px;">
+                            <li>https://www.lego.com/*</li>
+                            <li>https://www.amazon.com/*</li>
+                            <li>https://www.walmart.com/*</li>
+                            <li>https://www.target.com/*</li>
+                        </ul>
+                        These permissions only allow fetching public data from these specific domains, nothing more.
+                    </div>
+                </div>
+            </div>
+
+            <h2>Data Security</h2>
+            <p>
+                Since all data is stored locally on your device using Chrome's secure storage API, your data is protected by:
+            </p>
+            <ul>
+                <li>Chrome's built-in encryption for extension storage</li>
+                <li>Your device's operating system security</li>
+                <li>Your Google account security (if Chrome sync is enabled)</li>
+            </ul>
+            <p>
+                DealHawk does not transmit data over the internet (except for fetching public product information), so there is no risk of data interception or server breaches.
+            </p>
+
+            <h2>Your Rights</h2>
+            <p>
+                Since DealHawk does not collect or store personal information on external servers, there is no data to request, modify, or delete from our systems. However, you can:
+            </p>
+            <ul>
+                <li><strong>View your data:</strong> Click the extension icon to see all stored opportunities and settings</li>
+                <li><strong>Delete your data:</strong> Uninstall the extension or clear Chrome's extension storage</li>
+                <li><strong>Control notifications:</strong> Disable in Chrome settings or the extension's settings page</li>
+            </ul>
+
+            <h2>Open Source</h2>
+            <p>
+                DealHawk is transparent in its operation. The complete source code is available on GitHub for review, ensuring that the extension operates exactly as described in this privacy policy.
+            </p>
+
+            <h2>Changes to This Policy</h2>
+            <p>
+                We may update this privacy policy from time to time. Any changes will be reflected in the "Last Updated" date at the top of this page. Continued use of DealHawk after changes constitutes acceptance of the updated policy.
+            </p>
+
+            <div class="contact-section">
+                <h2>Contact Us</h2>
+                <p>
+                    If you have questions, concerns, or suggestions about this privacy policy or DealHawk's data practices, please contact us:
+                </p>
+                <p style="margin-top: 24px;">
+                    <strong>GitHub:</strong> <a href="https://github.com/lucavehbiu/dealhawk-extension" target="_blank">lucavehbiu/dealhawk-extension</a>
+                </p>
+            </div>
         </div>
 
-        <div class="footer">
+        <footer>
             <p><strong>DealHawk</strong> - Privacy-First Lego Arbitrage Alerts</p>
-            <p>© 2025 DealHawk. All rights reserved.</p>
-        </div>
+            <p style="margin-top: 8px;">© 2025 DealHawk. All rights reserved.</p>
+            <p style="margin-top: 16px;"><a href="index.html">← Back to Home</a></p>
+        </footer>
     </div>
 </body>
 </html>
