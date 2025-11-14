@@ -53,7 +53,7 @@
 
         <div id="loadingState" class="loading-state">
           <div class="spinner"></div>
-          <p>Scanning for deals...</p>
+          <p id="scanningMessage">Scanning for deals...</p>
         </div>
 
         <div id="emptyState" class="empty-state" style="display: none;">
@@ -69,7 +69,11 @@
       <!-- Settings Tab -->
       <div id="settingsTab" class="tab-content">
         <div class="settings-section">
-          <h3>General Settings</h3>
+          <h3 class="collapsible-header">
+            <span>General Settings</span>
+            <span class="collapse-icon">▼</span>
+          </h3>
+          <div class="collapsible-content">
 
           <div class="setting-item">
             <label class="setting-label">
@@ -107,31 +111,39 @@
             <input type="number" id="priceThresholdInput" class="setting-input" min="0" max="100" value="20">
             <p class="setting-description">Alert when retailer price is this % below MSRP</p>
           </div>
+          </div>
         </div>
 
         <div class="settings-section">
-          <h3>Retailers</h3>
+          <h3 class="collapsible-header">
+            <span>Retailers</span>
+            <span class="collapse-icon">▼</span>
+          </h3>
+          <div class="collapsible-content">
           <p class="section-subtitle">Which retailers to check for deals</p>
 
           <div class="setting-item">
             <label class="setting-label">
               <input type="checkbox" id="amazonCheckbox" checked>
-              <span>Amazon</span>
+              <span>Amazon ✓</span>
             </label>
           </div>
 
           <div class="setting-item">
             <label class="setting-label">
-              <input type="checkbox" id="walmartCheckbox" checked>
-              <span>Walmart</span>
+              <input type="checkbox" id="walmartCheckbox">
+              <span>Walmart (often blocked)</span>
             </label>
+            <p class="setting-description">May trigger bot detection</p>
           </div>
 
           <div class="setting-item">
             <label class="setting-label">
-              <input type="checkbox" id="targetCheckbox" checked>
-              <span>Target</span>
+              <input type="checkbox" id="targetCheckbox">
+              <span>Target (often blocked)</span>
             </label>
+            <p class="setting-description">May trigger bot detection</p>
+          </div>
           </div>
         </div>
 

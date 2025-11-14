@@ -96,8 +96,11 @@ await Promise.allSettled([
 - `/background/service-worker.js` - Main orchestration, alarm management, notification system
 
 ### Business Logic
-- `/utils/lego-scraper.js` - Scrapes Lego.com for retiring sets using multiple strategies
-- `/utils/retailer-checker.js` - Checks prices on Amazon, Walmart, Target
+- `/utils/lego-scraper.js` - Scrapes Lego.com for retiring sets using Apollo GraphQL state
+- `/utils/retailer-checker.js` - Orchestrates price checks across retailers
+- `/utils/retailers/amazon.js` - Amazon price checker module
+- `/utils/retailers/walmart.js` - Walmart price checker module
+- `/utils/retailers/target.js` - Target price checker module
 - `/utils/storage.js` - Chrome storage abstraction layer
 
 ### User Interface
@@ -224,10 +227,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 ## Common Modifications
 
 ### Adding a New Retailer
-1. Add scraping logic to `/utils/retailer-checker.js`
-2. Add retailer to settings UI in `/popup/popup.html`
-3. Update settings model in `/utils/storage.js`
-4. Add host permission to `/manifest.json`
+1. Create new file in `/utils/retailers/` (e.g., `bestbuy.js`)
+2. Implement `checkPrice(legoSet)` method returning `{ available, price, url, inStock }`
+3. Import and add to `/utils/retailer-checker.js`
+4. Add retailer to settings UI in `/popup/popup.html`
+5. Update settings model in `/utils/storage.js`
+6. Add host permission to `/manifest.json`
 
 ### Changing Scrape Interval
 - Default is 30 minutes (managed via `chrome.alarms`)
@@ -243,10 +248,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 1. **No Build Process**: Intentionally simple but means no TypeScript, no bundling
 2. **Web Scraping Fragility**: Retailer websites change frequently, breaking scrapers
-3. **No Automated Tests**: Manual testing only
-4. **CORS Reliance**: Depends on Chrome extension host permissions for cross-origin requests
-5. **Storage Limit**: Chrome storage.local has 5MB limit (currently not an issue)
-6. **Scraping Rate**: 30-minute intervals to avoid rate limiting/detection
+3. **Bot Detection**: Walmart and Target block automated requests (disabled by default)
+   - Amazon works reliably
+   - Walmart returns minimal HTML (15KB) - likely bot detection
+   - Target returns access denied page (180KB block page)
+   - Future: Could use proxies or rotating user agents, but increases complexity
+4. **No Automated Tests**: Manual testing only
+5. **CORS Reliance**: Depends on Chrome extension host permissions for cross-origin requests
+6. **Storage Limit**: Chrome storage.local has 5MB limit (currently not an issue)
+7. **Scraping Rate**: 30-minute intervals to avoid rate limiting/detection
 
 ## Future Enhancement Ideas (from TECHNICAL.md)
 

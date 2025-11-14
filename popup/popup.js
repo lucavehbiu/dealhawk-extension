@@ -8,6 +8,17 @@ import { StorageManager } from '../utils/storage.js';
 // DOM Elements
 let elements = {};
 
+// Scanning messages that rotate during loading
+const SCANNING_MESSAGES = [
+  'Scanning for deals...',
+  'Checking retailer prices...',
+  'Analyzing Lego sets...',
+  'Hunting for opportunities...',
+  'Comparing prices across stores...'
+];
+
+let scanningMessageInterval = null;
+
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('DealHawk popup loaded');
@@ -17,6 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Setup event listeners
   setupEventListeners();
+
+  // Setup collapsible sections
+  setupCollapsibles();
 
   // Load initial data
   await loadData();
@@ -45,6 +59,7 @@ function cacheElements() {
 
     // Opportunities
     loadingState: document.getElementById('loadingState'),
+    scanningMessage: document.getElementById('scanningMessage'),
     emptyState: document.getElementById('emptyState'),
     opportunitiesList: document.getElementById('opportunitiesList'),
     clearOpportunitiesBtn: document.getElementById('clearOpportunitiesBtn'),
@@ -90,6 +105,28 @@ function setupEventListeners() {
 
   // Footer
   elements.viewErrorsLink.addEventListener('click', handleViewErrors);
+}
+
+/**
+ * Setup collapsible sections
+ */
+function setupCollapsibles() {
+  const headers = document.querySelectorAll('.collapsible-header');
+
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.collapse-icon');
+
+      if (content.classList.contains('collapsed')) {
+        content.classList.remove('collapsed');
+        icon.textContent = '▼';
+      } else {
+        content.classList.add('collapsed');
+        icon.textContent = '▶';
+      }
+    });
+  });
 }
 
 /**
@@ -155,7 +192,7 @@ function createOpportunityCard(opp) {
         <h3 class="opportunity-title">${opp.setName}</h3>
         <p class="set-number">Set #${opp.setNumber}</p>
       </div>
-      <div class="discount-badge">${opp.discount}% OFF</div>
+      <div class="discount-badge">${opp.discount}% ↓</div>
     </div>
 
     <div class="opportunity-details">
@@ -178,7 +215,7 @@ function createOpportunityCard(opp) {
     </div>
 
     <div class="opportunity-footer">
-      <span class="retailer-tag">${capitalizeFirst(opp.retailer)}</span>
+      <span class="retailer-tag" data-retailer="${opp.retailer.toLowerCase()}">${capitalizeFirst(opp.retailer)}</span>
       <button class="btn-primary btn-small" data-url="${opp.retailerUrl}">View Deal →</button>
     </div>
   `;
@@ -355,19 +392,34 @@ async function handleViewErrors(e) {
 }
 
 /**
- * Show loading state
+ * Show loading state with rotating messages
  */
 function showLoading() {
   elements.loadingState.style.display = 'flex';
   elements.emptyState.style.display = 'none';
   elements.opportunitiesList.style.display = 'none';
+
+  // Start rotating scanning messages
+  let messageIndex = 0;
+  elements.scanningMessage.textContent = SCANNING_MESSAGES[messageIndex];
+
+  scanningMessageInterval = setInterval(() => {
+    messageIndex = (messageIndex + 1) % SCANNING_MESSAGES.length;
+    elements.scanningMessage.textContent = SCANNING_MESSAGES[messageIndex];
+  }, 1200); // Change message every 1.2 seconds
 }
 
 /**
- * Hide loading state
+ * Hide loading state and stop message rotation
  */
 function hideLoading() {
   elements.loadingState.style.display = 'none';
+
+  // Stop rotating messages
+  if (scanningMessageInterval) {
+    clearInterval(scanningMessageInterval);
+    scanningMessageInterval = null;
+  }
 }
 
 /**

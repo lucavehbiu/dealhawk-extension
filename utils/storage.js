@@ -49,8 +49,8 @@ export class StorageManager {
       notificationsEnabled: true,
       retailers: {
         amazon: true,
-        walmart: true,
-        target: true
+        walmart: false,  // Disabled: Bot detection blocks automated requests
+        target: false    // Disabled: Bot detection blocks automated requests
       }
     };
   }
