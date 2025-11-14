@@ -145,10 +145,11 @@ await Promise.allSettled([
 ## Scraping Implementation Notes
 
 ### Lego.com Scraping
-- Target URL: `https://www.lego.com/en-us/categories/last-chance`
+- Target URL: `https://www.lego.com/en-us/categories/last-chance-to-buy`
 - Uses `fetch()` with CORS (works because extension has host permissions)
 - Parses HTML to extract retiring set URLs
 - Fetches individual set pages to get MSRP and details
+- **Note**: Lego changed URL from `/last-chance` to `/last-chance-to-buy` - monitor for future changes
 
 ### Retailer Scraping
 Each retailer requires different parsing strategies due to varying page structures:
@@ -177,6 +178,14 @@ Defined in `manifest.json`:
 - `alarms` - Periodic scraping
 - `notifications` - Desktop alerts
 - Host permissions for Lego.com, Amazon, Walmart, Target
+
+**Important**: The service worker must be declared with `"type": "module"` in manifest.json to support ES6 imports:
+```json
+"background": {
+  "service_worker": "background/service-worker.js",
+  "type": "module"
+}
+```
 
 ## Documentation
 

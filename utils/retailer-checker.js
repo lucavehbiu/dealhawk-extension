@@ -62,18 +62,46 @@ export class RetailerChecker {
       });
 
       if (!response.ok) {
-        return { available: false, error: 'Failed to fetch' };
+        return { available: false, error: `Failed to fetch (HTTP ${response.status})` };
       }
 
       const html = await response.text();
 
+      // Check if we hit a bot detection page
+      if (html.includes('api-services-support@amazon.com') || html.includes('To discuss automated access')) {
+        return { available: false, reason: 'Bot detection (try manual search)', blocked: true };
+      }
+
       // Parse Amazon's search results
-      // Look for price data in the first result
-      const priceMatch = html.match(/\$(\d+\.\d{2})/);
+      // Amazon uses multiple price formats, try them all
+      let priceMatch = null;
+      let price = null;
+
+      // Try various price patterns
+      const pricePatterns = [
+        /"priceAmount":(\d+\.\d{2})/,           // JSON price in HTML
+        /\$(\d+\.\d{2})/,                        // Standard $XX.XX
+        /"price":\s*"(\d+\.\d{2})"/,            // JSON "price": "XX.XX"
+        /a-price-whole">(\d+)<.*?a-price-fraction">(\d+)/s,  // Separate whole/fraction
+        /\$<span[^>]*>(\d+)<\/span><span[^>]*>\.(\d+)/  // Span-wrapped price
+      ];
+
+      for (const pattern of pricePatterns) {
+        priceMatch = html.match(pattern);
+        if (priceMatch) {
+          if (priceMatch.length === 3) {
+            // Separate whole and fraction parts
+            price = parseFloat(`${priceMatch[1]}.${priceMatch[2]}`);
+          } else {
+            price = parseFloat(priceMatch[1]);
+          }
+          break;
+        }
+      }
+
       const asinMatch = html.match(/data-asin="([A-Z0-9]{10})"/);
 
-      if (priceMatch && asinMatch) {
-        const price = parseFloat(priceMatch[1]);
+      if (price && asinMatch) {
         const asin = asinMatch[1];
 
         return {

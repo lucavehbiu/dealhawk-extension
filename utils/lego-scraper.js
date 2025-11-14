@@ -6,9 +6,9 @@
 export class LegoScraper {
   static BASE_URL = 'https://www.lego.com';
   static API_ENDPOINTS = {
-    // Lego uses a product API - we'll target their "Last Chance" section
+    // Lego uses a product API - we'll target their "Last Chance to Buy" section
     US_SHOP: 'https://www.lego.com/api/graphql/ProductAvailability',
-    LAST_CHANCE: 'https://www.lego.com/en-us/categories/last-chance'
+    LAST_CHANCE: 'https://www.lego.com/en-us/categories/last-chance-to-buy'
   };
 
   /**
@@ -53,38 +53,8 @@ export class LegoScraper {
     const sets = [];
 
     try {
-      // Look for JSON-LD structured data
-      const jsonLdMatches = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/gs);
-
-      if (jsonLdMatches) {
-        for (const match of jsonLdMatches) {
-          const jsonStr = match.replace(/<script[^>]*>/, '').replace(/<\/script>/, '');
-          try {
-            const data = JSON.parse(jsonStr);
-            if (data['@type'] === 'Product') {
-              sets.push(this.extractSetFromJsonLd(data));
-            }
-          } catch (e) {
-            // Skip invalid JSON
-          }
-        }
-      }
-
-      // Look for data-product attributes in HTML
-      const productRegex = /data-product="([^"]+)"/g;
-      let match;
-
-      while ((match = productRegex.exec(html)) !== null) {
-        try {
-          const productData = JSON.parse(match[1].replace(/&quot;/g, '"'));
-          sets.push(this.extractSetFromDataAttribute(productData));
-        } catch (e) {
-          // Skip invalid JSON
-        }
-      }
-
-      // Look for React props data (Lego uses React)
-      const propsRegex = /__NEXT_DATA__\s*=\s*({.*?})\s*<\/script>/s;
+      // Look for __NEXT_DATA__ (Lego uses Next.js with Apollo Client)
+      const propsRegex = /<script id="__NEXT_DATA__"[^>]*>(.*?)<\/script>/s;
       const propsMatch = html.match(propsRegex);
 
       if (propsMatch) {
@@ -104,57 +74,61 @@ export class LegoScraper {
     return sets;
   }
 
-  /**
-   * Extract set data from JSON-LD
-   */
-  static extractSetFromJsonLd(data) {
-    return {
-      id: data.sku || data.productID,
-      name: data.name,
-      setNumber: data.sku,
-      msrp: parseFloat(data.offers?.price || data.offers?.lowPrice || 0),
-      imageUrl: data.image,
-      status: 'retiring_soon',
-      legoUrl: data.url || data.offers?.url
-    };
-  }
 
   /**
-   * Extract set data from data-product attribute
-   */
-  static extractSetFromDataAttribute(data) {
-    return {
-      id: data.productId || data.id,
-      name: data.productName || data.name,
-      setNumber: data.productCode || data.sku,
-      msrp: parseFloat(data.price?.value || data.price || 0),
-      imageUrl: data.image || data.imageUrl,
-      status: data.availability?.includes('retiring') ? 'retiring_soon' : 'limited_stock',
-      legoUrl: `https://www.lego.com${data.url || ''}`
-    };
-  }
-
-  /**
-   * Extract sets from Next.js data
+   * Extract sets from Next.js data (Apollo Client state)
    */
   static extractSetsFromNextData(nextData) {
     const sets = [];
 
     try {
-      // Navigate the Next.js data structure
-      const pageProps = nextData.props?.pageProps;
+      const apolloState = nextData.props?.pageProps?.__APOLLO_STATE__;
+      if (!apolloState) {
+        console.error('No Apollo state found in Next.js data');
+        return sets;
+      }
 
-      if (pageProps?.products) {
-        for (const product of pageProps.products) {
-          sets.push({
-            id: product.productId,
-            name: product.name,
-            setNumber: product.productCode,
-            msrp: parseFloat(product.price?.centAmount / 100 || 0),
-            imageUrl: product.image?.url,
-            status: 'retiring_soon',
-            legoUrl: `https://www.lego.com${product.slug}`
-          });
+      // Find all ProductQueryResult objects
+      const productQueryKeys = Object.keys(apolloState).filter(k => k.startsWith('ProductQueryResult:'));
+
+      for (const queryKey of productQueryKeys) {
+        const queryResult = apolloState[queryKey];
+        if (!queryResult.results) continue;
+
+        // Process each product in the results
+        for (const productRef of queryResult.results) {
+          try {
+            const product = apolloState[productRef.id];
+            if (!product) continue;
+
+            // Get the variant data
+            const variant = product.variant ? apolloState[product.variant.id] : null;
+            if (!variant) continue;
+
+            // Get price data
+            const priceKey = `$${product.variant.id}.price`;
+            const price = apolloState[priceKey];
+
+            // Get attributes data
+            const attrKey = `$${product.variant.id}.attributes`;
+            const attributes = apolloState[attrKey];
+
+            if (!price) continue;
+
+            sets.push({
+              id: product.id,
+              name: product.name,
+              setNumber: product.productCode,
+              msrp: price.formattedValue || (price.centAmount / 100),
+              imageUrl: product.primaryImage,
+              status: 'retiring_soon',
+              legoUrl: `https://www.lego.com/en-us/product/${product.slug}`,
+              pieceCount: attributes?.pieceCount || null,
+              ageRange: attributes?.ageRange || null
+            });
+          } catch (error) {
+            console.error('Error processing product:', error);
+          }
         }
       }
     } catch (error) {
