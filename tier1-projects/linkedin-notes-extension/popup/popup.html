@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Notes</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 LinkedIn Notes</h1>
+      <p class="subtitle">Private notes for your connections</p>
+    </header>
+
+    <div id="current-profile" class="section hidden">
+      <div class="profile-header">
+        <img id="profile-pic" src="" alt="Profile" class="profile-img">
+        <div class="profile-info">
+          <h3 id="profile-name">Loading...</h3>
+          <p id="profile-headline" class="headline"></p>
+        </div>
+      </div>
+
+      <div class="note-editor">
+        <label for="note-input">Your Private Note:</label>
+        <textarea
+          id="note-input"
+          placeholder="e.g., Met at Tech Conference 2025. Interested in our product. Follow up in 2 weeks about partnership."
+          rows="6"
+        ></textarea>
+
+        <div class="meta-fields">
+          <div class="field">
+            <label for="last-contact">Last Contact:</label>
+            <input type="date" id="last-contact">
+          </div>
+          <div class="field">
+            <label for="next-followup">Next Follow-up:</label>
+            <input type="date" id="next-followup">
+          </div>
+          <div class="field">
+            <label for="tags">Tags:</label>
+            <input type="text" id="tags" placeholder="e.g., hot-lead, partner, mentor">
+          </div>
+        </div>
+
+        <button id="save-note" class="btn-primary">💾 Save Note</button>
+        <div id="save-status" class="status hidden"></div>
+      </div>
+    </div>
+
+    <div id="not-on-profile" class="section hidden">
+      <div class="empty-state">
+        <p>👤 Navigate to a LinkedIn profile to save a note</p>
+        <p class="small">Your notes are completely private and stored locally.</p>
+      </div>
+    </div>
+
+    <div id="all-notes-section" class="section">
+      <div class="section-header">
+        <h3>All Saved Notes</h3>
+        <button id="export-notes" class="btn-secondary">📥 Export</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="search-notes" placeholder="🔍 Search notes...">
+      </div>
+
+      <div id="notes-list" class="notes-list">
+        <!-- Notes will be populated here -->
+      </div>
+    </div>
+
+    <footer>
+      <div class="upgrade-cta">
+        <p>💎 <strong>Upgrade to Pro</strong> for unlimited notes, reminders, and sync</p>
+        <button id="upgrade-btn" class="btn-upgrade">Upgrade - $9/mo</button>
+      </div>
+      <p class="version">v1.0.0 | <a href="#" id="feedback-link">Send Feedback</a></p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "reddit-comment-automation",
+  "version": "1.0.0",
+  "description": "AI-powered Reddit comment automation for SaaS founders",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "client": "cd client && npm start",
+    "dev:all": "concurrently \"npm run dev\" \"npm run client\""
+  },
+  "keywords": ["reddit", "automation", "ai", "marketing", "saas"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.2",
+    "axios": "^1.6.0",
+    "@anthropic-ai/sdk": "^0.9.0",
+    "snoowrap": "^1.23.0",
+    "mongoose": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.2"
+  }
+}

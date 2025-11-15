@@ -1,0 +1,28 @@
+{
+  "name": "shopify-view-counter",
+  "version": "1.0.0",
+  "description": "Real-time product view counter for Shopify stores - boost conversions with social proof",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "ngrok": "ngrok http 3000"
+  },
+  "keywords": ["shopify", "app", "social-proof", "views", "conversion"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@shopify/shopify-api": "^7.7.0",
+    "@shopify/shopify-app-express": "^2.2.0",
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "redis": "^4.6.0",
+    "mongoose": "^8.0.0",
+    "socket.io": "^4.6.0",
+    "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "ngrok": "^5.0.0"
+  }
+}

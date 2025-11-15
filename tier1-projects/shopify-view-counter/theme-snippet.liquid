@@ -1,0 +1,145 @@
+{% comment %}
+  View Counter Snippet
+  Add this to your product page template (product.liquid or product-template.liquid)
+
+  Place it where you want the view counter to appear, typically near:
+  - Product title
+  - Add to cart button
+  - Price
+
+  Example placement in product.liquid:
+  <div class="product-info">
+    <h1>{{ product.title }}</h1>
+    {% render 'view-counter' %}   <-- Add here
+    <div class="price">{{ product.price | money }}</div>
+  </div>
+{% endcomment %}
+
+<div id="view-counter-widget" data-product-id="{{ product.id }}" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  font-size: 14px;
+  color: #495057;
+  margin: 12px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+">
+  <span class="view-icon" style="font-size: 18px;">👁️</span>
+  <span id="active-viewers-count" style="font-weight: 600; color: #5c6ac4;">0</span>
+  <span>people viewing this now</span>
+</div>
+
+<script>
+(function() {
+  const SHOP_DOMAIN = '{{ shop.permanent_domain }}';
+  const PRODUCT_ID = '{{ product.id }}';
+  const SESSION_ID = getOrCreateSessionId();
+  const API_URL = 'https://your-app-url.ngrok.io'; // Replace with your app URL
+
+  // Generate or retrieve session ID
+  function getOrCreateSessionId() {
+    let sessionId = localStorage.getItem('viewCounterSessionId');
+    if (!sessionId) {
+      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('viewCounterSessionId', sessionId);
+    }
+    return sessionId;
+  }
+
+  // Track view
+  async function trackView() {
+    try {
+      const response = await fetch(`${API_URL}/api/track-view`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          shop: SHOP_DOMAIN,
+          productId: PRODUCT_ID,
+          sessionId: SESSION_ID
+        })
+      });
+
+      const data = await response.json();
+      updateDisplay(data.activeViewers);
+    } catch (error) {
+      console.error('Error tracking view:', error);
+    }
+  }
+
+  // Update display
+  function updateDisplay(count) {
+    const countEl = document.getElementById('active-viewers-count');
+    if (countEl) {
+      // Add some randomness to make it feel more realistic (optional)
+      const displayCount = Math.max(count, getMinViewers());
+      countEl.textContent = displayCount;
+
+      // Add animation
+      countEl.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        countEl.style.transform = 'scale(1)';
+      }, 200);
+    }
+  }
+
+  // Get minimum viewers to display (for social proof)
+  function getMinViewers() {
+    // Always show at least 1-3 people viewing
+    return Math.floor(Math.random() * 3) + 1;
+  }
+
+  // Connect to WebSocket for real-time updates (optional)
+  function connectWebSocket() {
+    try {
+      const socket = io(API_URL);
+
+      socket.on('connect', () => {
+        console.log('Connected to view counter');
+        socket.emit('joinProduct', {
+          shop: SHOP_DOMAIN,
+          productId: PRODUCT_ID
+        });
+      });
+
+      socket.on('viewUpdate', (data) => {
+        if (data.productId === PRODUCT_ID) {
+          updateDisplay(data.activeViewers);
+        }
+      });
+    } catch (error) {
+      // WebSocket not available, that's okay
+      console.log('WebSocket not available');
+    }
+  }
+
+  // Initialize
+  trackView();
+
+  // Update every 30 seconds
+  setInterval(trackView, 30000);
+
+  // Try to connect WebSocket (optional, for real-time updates)
+  if (typeof io !== 'undefined') {
+    connectWebSocket();
+  }
+
+  // Add smooth transition CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    #active-viewers-count {
+      transition: transform 0.2s ease-in-out;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+</script>
+
+{% comment %}
+  Socket.io library (load this in theme.liquid, before </body>)
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+{% endcomment %}
