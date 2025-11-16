@@ -4,7 +4,7 @@
 
 export class AmazonChecker {
   // Amazon Associates affiliate tag
-  static AFFILIATE_TAG = 'lucavehbiu-20';
+  static AFFILIATE_TAG = 'lucavehbiu-21';
 
   /**
    * Check Amazon for the set
