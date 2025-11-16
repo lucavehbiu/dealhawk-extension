@@ -1,0 +1,23 @@
+{
+  "name": "notion-template-builder",
+  "version": "1.0.0",
+  "description": "Programmatically build premium Notion templates using the Notion API",
+  "main": "build-templates-auto.js",
+  "scripts": {
+    "build": "node build-templates-auto.js",
+    "build:student": "node -e \"require('./build-templates-auto').buildStudentTemplate(process.env.NOTION_PARENT_PAGE_ID)\"",
+    "build:creator": "node -e \"require('./build-templates-auto').buildCreatorTemplate(process.env.NOTION_PARENT_PAGE_ID)\"",
+    "build:lifeos": "node -e \"require('./build-templates-auto').buildLifeOSTemplate(process.env.NOTION_PARENT_PAGE_ID)\""
+  },
+  "keywords": [
+    "notion",
+    "templates",
+    "automation",
+    "productivity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@notionhq/client": "^2.2.14"
+  }
+}
