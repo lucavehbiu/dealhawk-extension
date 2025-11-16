@@ -186,19 +186,23 @@ function createOpportunityCard(opp) {
 
   const timeAgo = getTimeAgo(opp.timestamp);
 
+  // Build Lego URL using set number (removes dashes and uses just the number)
+  const setNum = opp.setNumber ? opp.setNumber.replace(/-/g, '') : null;
+  const legoUrl = setNum ? `https://www.lego.com/en-us/product/${setNum}` : null;
+
   card.innerHTML = `
     <div class="opportunity-header">
       <div>
         <h3 class="opportunity-title">${opp.setName}</h3>
         <p class="set-number">Set #${opp.setNumber}</p>
       </div>
-      <div class="discount-badge">${opp.discount}% ↓</div>
+      <div class="discount-badge">${opp.discount}%↓</div>
     </div>
 
     <div class="opportunity-details">
       <div class="detail-item">
         <span class="detail-label">MSRP</span>
-        <span class="detail-value">$${opp.msrp.toFixed(2)}</span>
+        <span class="detail-value ${legoUrl ? 'lego-link' : ''}" ${legoUrl ? `data-lego-url="${legoUrl}"` : ''}>$${opp.msrp.toFixed(2)}</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">${capitalizeFirst(opp.retailer)} Price</span>
@@ -225,6 +229,17 @@ function createOpportunityCard(opp) {
   viewBtn.addEventListener('click', () => {
     chrome.tabs.create({ url: opp.retailerUrl });
   });
+
+  // Add click handler for Lego MSRP link if it exists
+  const legoLink = card.querySelector('.lego-link');
+  if (legoLink) {
+    legoLink.addEventListener('click', () => {
+      const url = legoLink.getAttribute('data-lego-url');
+      if (url) {
+        chrome.tabs.create({ url: url });
+      }
+    });
+  }
 
   return card;
 }

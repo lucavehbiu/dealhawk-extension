@@ -3,6 +3,9 @@
  */
 
 export class AmazonChecker {
+  // Amazon Associates affiliate tag
+  static AFFILIATE_TAG = 'lucavehbiu-20';
+
   /**
    * Check Amazon for the set
    */
@@ -62,10 +65,13 @@ export class AmazonChecker {
       if (price && asinMatch) {
         const asin = asinMatch[1];
 
+        // Build affiliate URL with tracking tag
+        const affiliateUrl = `https://www.amazon.com/dp/${asin}?tag=${this.AFFILIATE_TAG}&linkCode=ll1&language=en_US&ref_=as_li_ss_tl`;
+
         return {
           available: true,
           price: price,
-          url: `https://www.amazon.com/dp/${asin}`,
+          url: affiliateUrl,
           inStock: !html.includes('Currently unavailable')
         };
       }
